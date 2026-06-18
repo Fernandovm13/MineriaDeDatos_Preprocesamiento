@@ -1,11 +1,13 @@
 # Declaración de Uso de IA (AI_USAGE.md)
 
-En cumplimiento con las reglas de entrega de la materia, se detalla el uso de herramientas de Inteligencia Artificial para la resolución del **Lab 1 — Pipeline de preprocesamiento de texto**.
+En cumplimiento con las reglas de entrega de la materia, se detalla el uso de herramientas de Inteligencia Artificial para la resolución del **Lab 1** y del **Lab 2**.
 
 ## Herramienta Utilizada
-- **Modelo:** Gemini 3.5 (a través del asistente de codificación)
+- **Modelo:** Gemini 3.5
 
-## Uso de la IA por Celda / Sección
+## Uso de la IA por Lab y Sección
+
+### Lab 1 — Pipeline de preprocesamiento de texto
 
 1. **Sección 1.a (Estadísticas del Corpus)**
    - **Consulta:** Se le preguntó a la IA cómo obtener la longitud promedio en palabras usando la sintaxis de Pandas con un split ingenuo por espacios.
@@ -31,3 +33,17 @@ En cumplimiento con las reglas de entrega de la materia, se detalla el uso de he
    - **Consulta:** Se discutió conceptualmente si la lematización era mejor que el stemming para este tamaño de corpus.
    - **Resultado de la IA:** Aportó argumentos sobre la diferencia cualitativa en el idioma español.
    - **Cambios aplicados:** Se redactó la justificación en base a los números del vocabulario y se seleccionó la lematización para el pipeline `preprocesar`.
+
+---
+
+### Lab 2 — Su primer motor de búsqueda
+
+1. **Sección 1 y 3 (Algoritmos núcleo TF-IDF y Similitud Coseno)**
+   - **Consulta:** Se consultó a la IA por el cálculo de similitud coseno optimizado para vectores dispersos (representados en Python como diccionarios `dict`).
+   - **Resultado de la IA:** Sugirió iterar únicamente sobre las claves del diccionario más pequeño para mejorar la eficiencia del producto punto.
+   - **Cambios aplicados:** Se implementó esta lógica de optimización en la función `coseno(v1, v2)`.
+
+2. **Sección 4.a (Consultas Fallidas)**
+   - **Consulta:** Se discutió qué tipo de consultas darían un resultado nulo (score de 0.0) a pesar de ser semánticamente relevantes en el corpus de noticias.
+   - **Resultado de la IA:** Sugirió usar "temblor en el mar" (para contrastar con "sismo" y "costa") y "computadoras rápidas" (para contrastar con "laboratorio de IA" y "GPUs").
+   - **Cambios aplicados:** Se incorporaron estas consultas en el notebook y se redactaron manualmente las causas de la falla (sinonimia y brecha de abstracción conceptual).
