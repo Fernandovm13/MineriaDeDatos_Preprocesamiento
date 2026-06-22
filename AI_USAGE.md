@@ -1,6 +1,6 @@
 # Declaración de Uso de IA (AI_USAGE.md)
 
-En cumplimiento con las reglas de entrega de la materia, se detalla el uso de herramientas de Inteligencia Artificial para la resolución del **Lab 1**, del **Lab 2** y del **Lab 3**.
+En cumplimiento con las reglas de entrega de la materia, se detalla el uso de herramientas de Inteligencia Artificial para la resolución del **Lab 1**, del **Lab 2**, del **Lab 3** y del **Lab 4**.
 
 ## Herramienta Utilizada
 - **Modelo:** Gemini 3.5
@@ -66,3 +66,22 @@ En cumplimiento con las reglas de entrega de la materia, se detalla el uso de he
    - **Consulta:** Se consultó a la IA la diferencia conceptual entre MAP y nDCG y cuándo cada una es más adecuada para evaluar un sistema de recuperación de información.
    - **Resultado de la IA:** Explicó que MAP es más simple y adecuada cuando la relevancia es binaria, mientras que nDCG es más precisa cuando la relevancia es graduada (0-3) porque pondera más los documentos altamente relevantes que aparecen en primeras posiciones.
    - **Cambios aplicados:** Se implementaron ambas métricas desde cero con las fórmulas correspondientes y se redactó la decisión final basada en nDCG@5 y MAP.
+
+---
+
+### Lab 4 — Descubrimiento de temas con K-Means
+
+1. **Sección 1.a (Matriz TF-IDF + Normalización L2, celda `cacd9163`)**
+   - **Consulta:** Se preguntó a la IA la razón matemática por la que se normaliza la matriz TF-IDF a norma L2 antes de aplicar K-Means.
+   - **Resultado de la IA:** Explicó que la normalización L2 convierte la distancia euclidiana en equivalente a la similitud coseno, que es la métrica correcta para comparar documentos independientemente de su longitud.
+   - **Cambios aplicados:** Se implementó la normalización con `np.linalg.norm` sobre las filas de la matriz y se redactó la justificación en el markdown correspondiente.
+
+2. **Sección 2.a (K-Means desde cero + elección de k, celda `542f10c3`)**
+   - **Consulta:** Se consultó a la IA cómo implementar de forma eficiente el paso de asignación de K-Means usando operaciones matriciales de NumPy (broadcasting) en lugar de bucles Python.
+   - **Resultado de la IA:** Sugirió usar `X[:, np.newaxis] - centroids[np.newaxis, :]` para calcular todas las distancias en una sola operación.
+   - **Cambios aplicados:** Se adoptó ese enfoque matricial en la función `kmeans`, mejorando la claridad y eficiencia del código.
+
+3. **Sección 4.a (Análisis del documento mal agrupado, celda `be7bd5e2` y markdown `6af60cf4`)**
+   - **Consulta:** Se consultó a la IA por qué documentos semánticamente similares (d02 y d13) pueden quedar en clusters distintos cuando usan distintas palabras para el mismo concepto.
+   - **Resultado de la IA:** Explicó la limitación de TF-IDF como representación de bolsa de palabras sin semántica, contrastándola con embeddings como Word2Vec o BERT.
+   - **Cambios aplicados:** Se redactó manualmente el análisis conectando la falla de clustering con la brecha de sinonimia y la Sesión 2 del curso.
