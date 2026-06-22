@@ -1,6 +1,6 @@
 # Declaración de Uso de IA (AI_USAGE.md)
 
-En cumplimiento con las reglas de entrega de la materia, se detalla el uso de herramientas de Inteligencia Artificial para la resolución del **Lab 1** y del **Lab 2**.
+En cumplimiento con las reglas de entrega de la materia, se detalla el uso de herramientas de Inteligencia Artificial para la resolución del **Lab 1**, del **Lab 2** y del **Lab 3**.
 
 ## Herramienta Utilizada
 - **Modelo:** Gemini 3.5
@@ -47,3 +47,22 @@ En cumplimiento con las reglas de entrega de la materia, se detalla el uso de he
    - **Consulta:** Se discutió qué tipo de consultas darían un resultado nulo (score de 0.0) a pesar de ser semánticamente relevantes en el corpus de noticias.
    - **Resultado de la IA:** Sugirió usar "temblor en el mar" (para contrastar con "sismo" y "costa") y "computadoras rápidas" (para contrastar con "laboratorio de IA" y "GPUs").
    - **Cambios aplicados:** Se incorporaron estas consultas en el notebook y se redactaron manualmente las causas de la falla (sinonimia y brecha de abstracción conceptual).
+
+---
+
+### Lab 3 — BM25 y evaluación de búsqueda
+
+1. **Parte A — Implementación de BM25 (celdas `85371372` y `5c0638ea`)**
+   - **Consulta:** Se consultó a la IA la fórmula IDF suavizada de BM25 (`ln(1 + (N - df + 0.5)/(df + 0.5))`) y cómo difiere conceptualmente del IDF clásico.
+   - **Resultado de la IA:** Explicó que la variante suavizada garantiza que el IDF nunca sea negativo o cero, incluso para términos que aparecen en todos los documentos.
+   - **Cambios aplicados:** Se implementó `idf_bm25` siguiendo esta fórmula y se verificó manualmente que los valores fueran no-negativos para todos los términos del corpus.
+
+2. **Parte A — Comparación lado a lado y barrido de parámetros (celdas `e2f130ee` y `0a4a48c0`)**
+   - **Consulta:** Se preguntó a la IA cómo mostrar de forma clara una comparación en paralelo de dos rankings en la terminal, sin usar librerías adicionales.
+   - **Resultado de la IA:** Sugirió formatear el output usando f-strings con ancho fijo (`:30`).
+   - **Cambios aplicados:** Se aplicó ese formato en el bucle de impresión del top-5.
+
+3. **Parte B — Métricas de IR desde cero (celda `25975a15`)**
+   - **Consulta:** Se consultó a la IA la diferencia conceptual entre MAP y nDCG y cuándo cada una es más adecuada para evaluar un sistema de recuperación de información.
+   - **Resultado de la IA:** Explicó que MAP es más simple y adecuada cuando la relevancia es binaria, mientras que nDCG es más precisa cuando la relevancia es graduada (0-3) porque pondera más los documentos altamente relevantes que aparecen en primeras posiciones.
+   - **Cambios aplicados:** Se implementaron ambas métricas desde cero con las fórmulas correspondientes y se redactó la decisión final basada en nDCG@5 y MAP.
