@@ -1,6 +1,6 @@
 # Declaración de Uso de IA (AI_USAGE.md)
 
-En cumplimiento con las reglas de entrega de la materia, se detalla el uso de herramientas de Inteligencia Artificial para la resolución del **Lab 1**, del **Lab 2**, del **Lab 3**, del **Lab 4** y del **Lab 5**.
+En cumplimiento con las reglas de entrega de la materia, se detalla el uso de herramientas de Inteligencia Artificial para la resolución del **Lab 1**, del **Lab 2**, del **Lab 3**, del **Lab 4**, del **Lab 5** y del **Lab 6**.
 
 ## Herramienta Utilizada
 - **Modelo:** Gemini 3.5
@@ -104,3 +104,22 @@ En cumplimiento con las reglas de entrega de la materia, se detalla el uso de he
    - **Consulta:** Se consultó a la IA cómo reutilizar los `qrels` del Lab 3 para evaluar el sistema semántico usando la misma métrica nDCG@5.
    - **Resultado de la IA:** Indicó que basta con reusar la misma función `ndcg_at_k` aplicándola sobre el ranking devuelto por `buscar_semantico`.
    - **Cambios aplicados:** Se implementó la función `evaluar` genérica y se usó para los tres buscadores, generando la tabla comparativa de nDCG@5 medio y desglose por consulta.
+
+---
+
+### Lab 6 — Fine-tuning de BERT
+
+1. **Parte A — Sentence-BERT: línea base + fine-tuning + búsqueda (celdas `0dbb8632`, `4be2be35`, `0bb9bfa6`)**
+   - **Consulta:** Se preguntó a la IA cómo construir correctamente los pares de entrenamiento `InputExample(texts=[consulta, documento])` para `MultipleNegativesRankingLoss` a partir de los qrels del Lab 3, y cuántos pares mínimos son necesarios para que el fine-tuning tenga efecto.
+   - **Resultado de la IA:** Explicó que solo se necesitan pares positivos (relevancia ≥ 2); la pérdida trata los otros documentos del batch como negativos implícitos. Con 5-10 pares el efecto es visible pero ruidoso; en producción se recomienda ≥100.
+   - **Cambios aplicados:** Se construyeron pares desde qrels, se configuró `DataLoader` con `batch_size=4`, se ejecutó `modelo.fit(epochs=2)` y se recalculó nDCG@5 tras el fine-tuning.
+
+2. **Parte B — Clasificación de sentimiento con BETO (celdas `955ceede`, `022e2c3e`, `72b66fdb`, `b0bb159e`, `86e77a82`)**
+   - **Consulta:** Se consultó a la IA qué parámetros de `TrainingArguments` son equivalentes a `no_cuda` en versiones recientes de Transformers (el parámetro fue eliminado), y qué diferencia existe entre `accuracy` y `f1-macro` en datasets desbalanceados.
+   - **Resultado de la IA:** Indicó que el reemplazo de `no_cuda` es `use_cpu=True`. También explicó que F1-macro es el criterio correcto cuando las clases son desbalanceadas porque penaliza el mal desempeño en clases minoritarias con igual peso que las mayoritarias.
+   - **Cambios aplicados:** Se configuró `TrainingArguments` con `use_cpu=(device=='cpu')`, se implementó `compute_metrics` con accuracy + F1-macro, y se analizó el domain shift al aplicar el modelo de tweets sobre noticias chiapanecas.
+
+3. **Parte C — NER con CoNLL-2002 (celdas `b94bf6aa`, `c1a03dd8`, `23b125f1`, `a0558f3f`, `1463ab96`)**
+   - **Consulta:** Se consultó a la IA el mecanismo exacto de alineación de subpalabras con `word_ids()` para asignar `-100` a los tokens secundarios y a `[CLS]`/`[SEP]`, y por qué `seqeval` es preferible a accuracy por token en NER.
+   - **Resultado de la IA:** Explicó que la regla es: primera subpalabra → etiqueta real; resto de subpalabras y tokens especiales → `-100` (ignorados en la pérdida). Respecto a seqeval, señaló que accuracy por token es engañosa porque la mayoría de tokens tienen etiqueta 'O'; seqeval exige que toda la entidad esté bien para contar como acierto.
+   - **Cambios aplicados:** Se implementó `tokeniza_y_alinea` con `word_ids(batch_index=i)`, se entrenó `AutoModelForTokenClassification` con BETO, se evaluó con `classification_report` de seqeval y se extrajo entidades de 3 documentos del corpus chiapaneco con `pipeline('ner', aggregation_strategy='simple')`.
