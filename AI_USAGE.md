@@ -1,6 +1,6 @@
 # Declaración de Uso de IA (AI_USAGE.md)
 
-En cumplimiento con las reglas de entrega de la materia, se detalla el uso de herramientas de Inteligencia Artificial para la resolución del **Lab 1**, del **Lab 2**, del **Lab 3** y del **Lab 4**.
+En cumplimiento con las reglas de entrega de la materia, se detalla el uso de herramientas de Inteligencia Artificial para la resolución del **Lab 1**, del **Lab 2**, del **Lab 3**, del **Lab 4** y del **Lab 5**.
 
 ## Herramienta Utilizada
 - **Modelo:** Gemini 3.5
@@ -85,3 +85,22 @@ En cumplimiento con las reglas de entrega de la materia, se detalla el uso de he
    - **Consulta:** Se consultó a la IA por qué documentos semánticamente similares (d02 y d13) pueden quedar en clusters distintos cuando usan distintas palabras para el mismo concepto.
    - **Resultado de la IA:** Explicó la limitación de TF-IDF como representación de bolsa de palabras sin semántica, contrastándola con embeddings como Word2Vec o BERT.
    - **Cambios aplicados:** Se redactó manualmente el análisis conectando la falla de clustering con la brecha de sinonimia y la Sesión 2 del curso.
+
+---
+
+### Lab 5 — Embeddings y búsqueda semántica
+
+1. **Parte A — Cargar FastText y explorar el espacio vectorial (celdas `ca8ca1ac`, `75eaca2f`, `86e12ddd`, `5e5685ea`)**
+   - **Consulta:** Se preguntó a la IA la diferencia entre `ft.get_word_vector()` y `ft.get_nearest_neighbors()` en la librería fasttext-wheel de Python.
+   - **Resultado de la IA:** Explicó que `get_word_vector` devuelve el vector de 300 dimensiones para una palabra (incluyendo OOV vía n-gramas), mientras que `get_nearest_neighbors` busca en el vocabulario los términos más cercanos por similitud coseno.
+   - **Cambios aplicados:** Se usaron ambas funciones para construir `vec()` y explorar vecinos de 'sequia', 'cafe' y 'chiapas', y se implementó `cos_vec` manualmente usando NumPy para mayor transparencia.
+
+2. **Parte B — vector_documento y buscar_semantico (celdas `da4af8b3`, `44a39eed`)**
+   - **Consulta:** Se consultó a la IA la estrategia óptima para agregar vectores de palabras a nivel de documento cuando hay listas de tokens de distintas longitudes.
+   - **Resultado de la IA:** Recomendó usar `np.mean(vecs, axis=0)` con manejo del caso vacío devolviendo un vector de ceros, ya que el promedio es la estrategia más simple y estable para Bag-of-Embeddings.
+   - **Cambios aplicados:** Se implementó `vector_documento` con esta lógica y se construyó el índice `EMB_DOCS`.
+
+3. **Parte B — Comparación 3 sistemas y re-evaluación nDCG (celdas `412790c9`, `76e71f87`)**
+   - **Consulta:** Se consultó a la IA cómo reutilizar los `qrels` del Lab 3 para evaluar el sistema semántico usando la misma métrica nDCG@5.
+   - **Resultado de la IA:** Indicó que basta con reusar la misma función `ndcg_at_k` aplicándola sobre el ranking devuelto por `buscar_semantico`.
+   - **Cambios aplicados:** Se implementó la función `evaluar` genérica y se usó para los tres buscadores, generando la tabla comparativa de nDCG@5 medio y desglose por consulta.
